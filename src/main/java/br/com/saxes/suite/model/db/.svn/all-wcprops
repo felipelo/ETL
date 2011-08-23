@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/personal/!svn/ver/22/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db
+END
+ConnectionWrapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/personal/!svn/ver/22/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/ConnectionWrapper.java
+END
+JoinStrategy.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/personal/!svn/ver/3/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/JoinStrategy.java
+END
+DBTreeSchema.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/personal/!svn/ver/22/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/DBTreeSchema.java
+END
+FKTreeNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/personal/!svn/ver/11/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/FKTreeNode.java
+END
+WriteProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/personal/!svn/ver/22/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/WriteProperties.java
+END
+UpdateCondition.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/personal/!svn/ver/22/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/UpdateCondition.java
+END
+TableTreeNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/personal/!svn/ver/22/SaxesSuiteAPI/trunk/SaxesSuiteAPI/src/main/java/br/com/saxes/suite/model/db/TableTreeNode.java
+END
