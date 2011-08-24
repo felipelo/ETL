@@ -14,8 +14,8 @@ public class FKTreeNode extends TreeNode {
     private TableTreeNode foreignTable;
 
     private ArrayList<Reference> references;
-//    private TextTreeNode localColumn;
-//    private TextTreeNode foreignColumn;
+    private TextTreeNode localColumn;
+    private TextTreeNode foreignColumn;
 
     private JoinStrategy joinStrategy;
     
@@ -28,8 +28,8 @@ public class FKTreeNode extends TreeNode {
     }
 
     @XmlIDREF
-//    public TextTreeNode getForeignColumn() { return foreignColumn; }
-//    public void setForeignColumn(TextTreeNode foreignColumn) { this.foreignColumn = foreignColumn; }
+    public TextTreeNode getForeignColumn() { return foreignColumn; }
+    public void setForeignColumn(TextTreeNode foreignColumn) { this.foreignColumn = foreignColumn; }
 
     public TableTreeNode getForeignTable() { return foreignTable; }
     public void setForeignTable(TableTreeNode foreignTable) {
@@ -37,9 +37,9 @@ public class FKTreeNode extends TreeNode {
         addChild( foreignTable );
     }
 
-//    @XmlIDREF
-//    public TextTreeNode getLocalColumn() { return localColumn; }
-//    public void setLocalColumn(TextTreeNode localColumn) { this.localColumn = localColumn; }
+    @XmlIDREF
+    public TextTreeNode getLocalColumn() { return localColumn; }
+    public void setLocalColumn(TextTreeNode localColumn) { this.localColumn = localColumn; }
 
     public JoinStrategy getJoinStrategy() { return joinStrategy; }
     public void setJoinStrategy(JoinStrategy joinStrategy) { this.joinStrategy = joinStrategy; }
@@ -58,9 +58,9 @@ public class FKTreeNode extends TreeNode {
 
     protected void clone( FKTreeNode fk ) throws CloneNotSupportedException {
         super.clone(fk);
-//        fk.setForeignColumn((TextTreeNode) foreignColumn.clone());
+        fk.setForeignColumn((TextTreeNode) foreignColumn.clone());
         fk.setForeignTable((TableTreeNode) foreignTable.clone());
-//        fk.setLocalColumn((TextTreeNode) localColumn.clone());
+        fk.setLocalColumn((TextTreeNode) localColumn.clone());
         fk.setJoinStrategy(joinStrategy);
     }
 
