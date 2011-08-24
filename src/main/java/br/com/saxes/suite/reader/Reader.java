@@ -4,7 +4,10 @@ import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.converter.TreeSchemaPool;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 import org.apache.commons.pool.ObjectPool;
@@ -17,7 +20,7 @@ public abstract class Reader implements Runnable {
 
     protected boolean finished;
 
-    protected final Vector<TreeSchema> buffer;
+    protected final List<TreeSchema> buffer;
 
     protected ObjectPool treeSchemaPool;
     protected SimpleDateFormat systemDateFormat;
@@ -34,7 +37,7 @@ public abstract class Reader implements Runnable {
 
         finished = false;
         
-        buffer = new Vector<TreeSchema>(BUFFER_SIZE);
+        buffer = Collections.synchronizedList( new ArrayList<TreeSchema>(BUFFER_SIZE) );
         treeSchemaPool = new TreeSchemaPool( treeSchema );
 
         log.fine("Padrão de data do systema: ".concat(System.getProperty("saxessuite.systemDatePattern")));
@@ -58,8 +61,8 @@ public abstract class Reader implements Runnable {
             treeNode = buffer.remove(0);
 
             //used to notify a thread that one spot are available
-            synchronized( this ) {
-                notifyAll();
+            synchronized( buffer ) {
+                buffer.notifyAll();
             }
         } else {
             /*

@@ -52,9 +52,9 @@ public class FixedTXTReader extends Reader {
          try {
             while (parser.next()) {
                 //if the buffer list is full, wait until it has at least one free spot.
-                synchronized (this) {
+                synchronized (buffer) {
                     while (isFull()) {
-                        wait();
+                        buffer.wait();
                     }
                 }
 

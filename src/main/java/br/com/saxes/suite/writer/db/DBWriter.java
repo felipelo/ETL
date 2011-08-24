@@ -114,9 +114,9 @@ public class DBWriter extends Writer {
     public void run() {
         try {
             while( !buffer.isEmpty() || !finished ) {
-                synchronized( this ) {
+                synchronized( buffer ) {
                     while( buffer.isEmpty() && !finished ) {
-                        wait();
+                        buffer.wait();
                     }
                 }
 
