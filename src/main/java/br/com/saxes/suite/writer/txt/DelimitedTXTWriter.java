@@ -42,9 +42,9 @@ public class DelimitedTXTWriter extends Writer {
     public void run() {
         try {
             while( !finished ) {
-                synchronized( this ) {
+                synchronized( buffer ) {
                     while( buffer.isEmpty() && !finished ) {
-                        wait();
+                        buffer.wait();
                     }
                 }
 

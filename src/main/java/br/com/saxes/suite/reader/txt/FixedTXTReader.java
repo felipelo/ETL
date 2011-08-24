@@ -1,6 +1,6 @@
 package br.com.saxes.suite.reader.txt;
 
-import br.com.idealogic.flatfileparser.FixedWidthFFParser;
+import br.com.personal.flatfileparser.FixedWidthFFParser;
 import br.com.saxes.suite.model.TextTreeNode;
 import br.com.saxes.suite.model.TreeNode;
 import br.com.saxes.suite.model.txt.FixedTXTTreeSchema;
@@ -52,9 +52,9 @@ public class FixedTXTReader extends Reader {
          try {
             while (parser.next()) {
                 //if the buffer list is full, wait until it has at least one free spot.
-                synchronized (this) {
+                synchronized (buffer) {
                     while (isFull()) {
-                        wait();
+                        buffer.wait();
                     }
                 }
 
@@ -72,6 +72,7 @@ public class FixedTXTReader extends Reader {
                             _mapped.setValue( _value.trim() );
 
                             log.finest("Lendo dado: ".concat(_mapped.getName()).concat(": ").concat(_value));
+                            System.out.println("Lendo dado: ".concat(_mapped.getName()).concat(":").concat(_value).concat(";"));
                         }
                     }
                 }

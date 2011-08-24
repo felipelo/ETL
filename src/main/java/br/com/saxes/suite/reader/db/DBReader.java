@@ -18,7 +18,7 @@ public class DBReader extends Reader {
 
     private DBTreeSchema dbTreeSchema;
 
-    private ResultSet rs;
+    private final ResultSet rs;
 
     public DBReader( DBTreeSchema dbTreeSchema ) throws ReaderInitException {
         super(dbTreeSchema);
@@ -85,9 +85,9 @@ public class DBReader extends Reader {
         try {
             while (rs.next()) {
                 //if the buffer list is full, wait until it has at least one free spot.
-                synchronized( this ) {
+                synchronized( buffer ) {
                     while( isFull() ) {
-                        wait();
+                        buffer.wait();
                     }
                 }
                 

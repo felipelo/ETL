@@ -58,8 +58,8 @@ public class ProjectServiceTest {
         txtTreeSchema.setName("txt um dois tres");
         txtTreeSchema.setFileRef(fileRef);
         txtTreeSchema.setRoot(lineTreeNode);
-        txtTreeSchema.setHeaderLines(1);
-        txtTreeSchema.setNewLine("\r\n");
+        txtTreeSchema.setHeaderLines(0);
+        txtTreeSchema.setNewLine("\n");
 
 
         //target schema
@@ -97,7 +97,7 @@ public class ProjectServiceTest {
         //connection
         ConnectionWrapper conn = new ConnectionWrapper();
         conn.setName("MySQL Root");
-        conn.setConnURL("jdbc:mysql://192.168.0.11:3306/test");
+        conn.setConnURL("jdbc:mysql://localhost:3306/teste");
         conn.setUser("root");
         conn.setPassword("root");
         conn.setDriver("com.mysql.jdbc.Driver");
