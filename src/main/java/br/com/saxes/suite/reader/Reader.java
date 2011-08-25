@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Logger;
 import org.apache.commons.pool.ObjectPool;
 
@@ -50,18 +49,27 @@ public abstract class Reader implements Runnable {
     }
 
     public boolean hasFinished() {
+		System.out.println(Thread.currentThread().getName() + " hasFinished()");
         return finished;
     }
 
     public TreeSchema next() throws IndexOutOfBoundsException {
         TreeSchema treeNode = null;
+		
+		while( buffer.isEmpty() ) {
+			synchronized( buffer ) {
+				
+			}
+		}
 
         if( !buffer.isEmpty() ) {
+			System.out.println(Thread.currentThread().getName() + " Tamanho do buffer: ".concat(String.valueOf(buffer.size())));
             log.finest("Tamanho do buffer: ".concat(String.valueOf(buffer.size())));
             treeNode = buffer.remove(0);
 
             //used to notify a thread that one spot are available
             synchronized( buffer ) {
+				System.out.println(Thread.currentThread().getName() + " notifing All()");
                 buffer.notifyAll();
             }
         } else {
@@ -77,14 +85,17 @@ public abstract class Reader implements Runnable {
     }
 
     public boolean isFull() {
+	System.out.println(Thread.currentThread().getName() + " isFull():RE " + buffer.size());
         return ((BUFFER_SIZE - buffer.size()) == 0);
     }
 
     public int bufferSize() {
+	System.out.println(Thread.currentThread().getName() + " bufferSize:RE ".concat(String.valueOf(buffer.size())));
         return buffer.size();
     }
 
     public boolean hasMore() {
+	System.out.println(Thread.currentThread().getName() + " hasMore():RE ");
         return !buffer.isEmpty();
     }
 

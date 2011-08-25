@@ -77,41 +77,42 @@ public class Converter implements Runnable {
         _tWriter.start();
 
         int _waitTime = 2;
-        while (reader.hasMore() || !reader.hasFinished() ) {
+        while ( !reader.hasFinished() ) {
             try {
                 
-                if (reader.hasMore()) {
-                    TreeSchema _sourceSchema = reader.next();
-                    
-                    TextTreeNode[] _sourceMappings = _sourceSchema.getMappedTreeNodes();
+//				if (reader.hasMore()) {
+				TreeSchema _sourceSchema = reader.next();
 
-                    TreeSchema _targetSchema = writer.borrowTreeSchema();
+				TextTreeNode[] _sourceMappings = _sourceSchema.getMappedTreeNodes();
 
-                    for( TextTreeNode _sourceMapped : _sourceMappings ) {
-                        String targetID = project.getMappedTargetID( _sourceMapped.getId() );
+				TreeSchema _targetSchema = writer.borrowTreeSchema();
 
-                        TextTreeNode[] tn = _targetSchema.getMappedTreeNodes();
-                        for( TextTreeNode temp : tn ) {
-                            if( targetID.equals(temp.getId()) ) {
-                                String _value = _sourceMapped.getValue();
+				for( TextTreeNode _sourceMapped : _sourceMappings ) {
+					String targetID = project.getMappedTargetID( _sourceMapped.getId() );
 
-                                Pattern _pattern = charConversion.get( _sourceMapped.getId() );
-                                if( _pattern != null ) {
-                                    Matcher _matcher = _pattern.matcher( _value );
-                                    _value = _matcher.replaceAll(" ");
-                                }
+					TextTreeNode[] tn = _targetSchema.getMappedTreeNodes();
+					for( TextTreeNode temp : tn ) {
+						if( targetID.equals(temp.getId()) ) {
+							String _value = _sourceMapped.getValue();
 
-                                temp.setValue( _value );
-                                break;
-                            }
-                        }
-                    }
+							Pattern _pattern = charConversion.get( _sourceMapped.getId() );
+							if( _pattern != null ) {
+								Matcher _matcher = _pattern.matcher( _value );
+								_value = _matcher.replaceAll(" ");
+							}
 
-                    writer.add( _targetSchema );
-                    reader.returnTreeSchema( _sourceSchema );
+							temp.setValue( _value );
+							break;
+						}
+					}
+				}
 
-                    //decrease the wait time when the reader's buffer isn't full
-                    _waitTime = Math.min(Math.round(_waitTime*0.5f), 1);
+				writer.add( _targetSchema );
+				reader.returnTreeSchema( _sourceSchema );
+
+				//decrease the wait time when the reader's buffer isn't full
+				_waitTime = Math.min(Math.round(_waitTime*0.5f), 1);
+					/*
                 } else {
                     _tReader.setPriority( Thread.MAX_PRIORITY );
                     _tWriter.setPriority( Thread.NORM_PRIORITY );
@@ -120,7 +121,7 @@ public class Converter implements Runnable {
                     _waitTime = Math.round(_waitTime*1.33f);
                     _tReader.setPriority( Thread.NORM_PRIORITY );
                     _tWriter.setPriority( Thread.MAX_PRIORITY );
-                }
+                }*/
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             } catch (CloneNotSupportedException ex) {

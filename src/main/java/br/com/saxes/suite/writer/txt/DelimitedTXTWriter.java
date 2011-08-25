@@ -44,7 +44,9 @@ public class DelimitedTXTWriter extends Writer {
             while( !finished ) {
                 synchronized( buffer ) {
                     while( buffer.isEmpty() && !finished ) {
+			System.out.println("Buffer.isEmpty && !finished.... waiting");
                         buffer.wait();
+			System.out.println(Thread.currentThread().getName() + " Waking up");
                     }
                 }
 

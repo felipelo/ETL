@@ -58,8 +58,8 @@ public class ProjectServiceTest {
         txtTreeSchema.setName("txt um dois tres");
         txtTreeSchema.setFileRef(fileRef);
         txtTreeSchema.setRoot(lineTreeNode);
-        txtTreeSchema.setHeaderLines(0);
-        txtTreeSchema.setNewLine("\n");
+        txtTreeSchema.setHeaderLines(1);
+        txtTreeSchema.setNewLine("\r\n");
 
 
         //target schema
