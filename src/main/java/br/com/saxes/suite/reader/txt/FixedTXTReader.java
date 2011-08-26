@@ -79,10 +79,16 @@ public class FixedTXTReader extends Reader {
                 }
 
                 buffer.add( _line );
+				synchronized( buffer ) {
+					System.out.println(Thread.currentThread().getName() + ":notifyAll():FixedTXTReader");
+					buffer.notifyAll();
+				}
             }
 			while( !buffer.isEmpty() ) {
 				synchronized( buffer ) {
-					buffer.wait();
+					System.out.println(Thread.currentThread().getName() + ":wait():FixedTXTReader");
+					buffer.wait( 500 );
+					System.out.println(Thread.currentThread().getName() + ":wake up:FixedTXTReader");
 				}
 			}
         } catch (Exception ex) {

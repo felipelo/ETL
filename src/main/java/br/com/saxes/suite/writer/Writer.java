@@ -50,8 +50,8 @@ public abstract class Writer implements Runnable {
     public void setFinished( boolean finished ) {
         this.finished = finished;
         
-        synchronized (this) {
-            notifyAll();
+        synchronized (buffer) {
+            buffer.notifyAll();
         }
     }
 

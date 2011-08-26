@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.pool.ObjectPool;
 
@@ -49,16 +50,20 @@ public abstract class Reader implements Runnable {
     }
 
     public boolean hasFinished() {
-		System.out.println(Thread.currentThread().getName() + " hasFinished()");
+		System.out.println(Thread.currentThread().getName() + " hasFinished():" + finished);
         return finished;
     }
 
     public TreeSchema next() throws IndexOutOfBoundsException {
         TreeSchema treeNode = null;
 		
-		while( buffer.isEmpty() ) {
+		while( buffer.isEmpty() && !finished ) {
 			synchronized( buffer ) {
-				
+				try {
+					System.out.println(Thread.currentThread().getName() + ":next - wait():Reader");
+					buffer.wait( 500 );
+					System.out.println(Thread.currentThread().getName() + ":next - wakeup:Reader");
+				} catch (InterruptedException ex) {}
 			}
 		}
 
@@ -72,14 +77,7 @@ public abstract class Reader implements Runnable {
 				System.out.println(Thread.currentThread().getName() + " notifing All()");
                 buffer.notifyAll();
             }
-        } else {
-            /*
-             * This exception should never be throws.
-             * Before to call this method, check if the buffer is already empty
-             * using 'hasMore()' method.
-             */
-            throw new IndexOutOfBoundsException();
-        }
+        } 
 
         return treeNode;
     }

@@ -76,12 +76,14 @@ public class Converter implements Runnable {
         _tReader.start();
         _tWriter.start();
 
-        int _waitTime = 2;
-        while ( !reader.hasFinished() ) {
+//		int _waitTime = 2;
+        while ( reader.hasMore() || !reader.hasFinished() ) {
             try {
                 
 //				if (reader.hasMore()) {
 				TreeSchema _sourceSchema = reader.next();
+				if( _sourceSchema == null )
+					continue;
 
 				TextTreeNode[] _sourceMappings = _sourceSchema.getMappedTreeNodes();
 
@@ -111,7 +113,7 @@ public class Converter implements Runnable {
 				reader.returnTreeSchema( _sourceSchema );
 
 				//decrease the wait time when the reader's buffer isn't full
-				_waitTime = Math.min(Math.round(_waitTime*0.5f), 1);
+//				_waitTime = Math.min(Math.round(_waitTime*0.5f), 1);
 					/*
                 } else {
                     _tReader.setPriority( Thread.MAX_PRIORITY );
@@ -132,7 +134,8 @@ public class Converter implements Runnable {
         }
         
         try {
-            writer.setFinished(true);
+			System.out.println("terminou!");
+            writer.setFinished(true);			
             _tWriter.join();
         } catch (InterruptedException ex) {
             ex.printStackTrace();

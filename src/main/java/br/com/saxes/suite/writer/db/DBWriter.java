@@ -113,10 +113,11 @@ public class DBWriter extends Writer {
     @Override
     public void run() {
         try {
-            while( !buffer.isEmpty() || !finished ) {
+			while( !buffer.isEmpty() || !finished ) {
                 synchronized( buffer ) {
-                    while( buffer.isEmpty() && !finished ) {
-                        buffer.wait();
+                    if( buffer.isEmpty() ) {
+                        buffer.wait( 500 );
+						continue;
                     }
                 }
 
