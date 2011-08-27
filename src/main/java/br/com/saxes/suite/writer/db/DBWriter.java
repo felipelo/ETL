@@ -113,10 +113,11 @@ public class DBWriter extends Writer {
     @Override
     public void run() {
         try {
-            while( !buffer.isEmpty() || !finished ) {
+			while( !buffer.isEmpty() || !finished ) {
                 synchronized( buffer ) {
-                    while( buffer.isEmpty() && !finished ) {
-                        buffer.wait();
+                    if( buffer.isEmpty() ) {
+                        buffer.wait( 500 );
+						continue;
                     }
                 }
 
@@ -132,9 +133,7 @@ public class DBWriter extends Writer {
                     for( _x = 0; _x < _columns.length; _x++ ) {
                         TextTreeNode _column = _columns[_x];
                         _pstmt.setString( _x+1, _column.getValue() );
-                        System.out.print(" | " + _column.getName() + " - " + _x+1 + " : " + _column.getValue());
                     }
-                    System.out.println("");
 
                     /*
                      * update conditions... only will work with mapped nodes.

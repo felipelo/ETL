@@ -54,7 +54,9 @@ public class FixedTXTReader extends Reader {
                 //if the buffer list is full, wait until it has at least one free spot.
                 synchronized (buffer) {
                     while (isFull()) {
+                        System.out.println(Thread.currentThread().getName() + "Buffer.isFull.... waiting " + buffer.size());
                         buffer.wait();
+						System.out.println(Thread.currentThread().getName() + " Waking up");
                     }
                 }
 
@@ -72,20 +74,31 @@ public class FixedTXTReader extends Reader {
                             _mapped.setValue( _value.trim() );
 
                             log.finest("Lendo dado: ".concat(_mapped.getName()).concat(": ").concat(_value));
-                            System.out.println("Lendo dado: ".concat(_mapped.getName()).concat(":").concat(_value).concat(";"));
                         }
                     }
                 }
 
                 buffer.add( _line );
+				synchronized( buffer ) {
+					System.out.println(Thread.currentThread().getName() + ":notifyAll():FixedTXTReader");
+					buffer.notifyAll();
+				}
             }
+			while( !buffer.isEmpty() ) {
+				synchronized( buffer ) {
+					System.out.println(Thread.currentThread().getName() + ":wait():FixedTXTReader");
+					buffer.wait( 500 );
+					System.out.println(Thread.currentThread().getName() + ":wake up:FixedTXTReader");
+				}
+			}
         } catch (Exception ex) {
             Logger.getLogger(FixedTXTReader.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 parser.close();
             } catch (Exception ex) {}
-            finished = true;
+			
+			finished = true;
         }
     }
 }
