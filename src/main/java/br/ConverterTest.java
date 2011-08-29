@@ -59,8 +59,8 @@ public class ConverterTest {
     }
 
     public static void main(String[] args) {
-//        new ConverterTest().testDB2TXT();
-        new ConverterTest().testTXT2DB();
+        new ConverterTest().testDB2TXT();
+//        new ConverterTest().testTXT2DB();
     }
 
 }
