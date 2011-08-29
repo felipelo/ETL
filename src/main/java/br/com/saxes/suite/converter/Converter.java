@@ -2,6 +2,7 @@ package br.com.saxes.suite.converter;
 
 import br.com.saxes.suite.model.Project;
 import br.com.saxes.suite.model.TextTreeNode;
+import br.com.saxes.suite.model.TreeNode;
 import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.model.db.DBTreeSchema;
 import br.com.saxes.suite.model.txt.DelimitedTXTTreeSchema;
@@ -28,28 +29,37 @@ public class Converter implements Runnable {
     private Writer writer;
 
     private HashMap<String, Pattern> charConversion;
+	
+	private TreeSchema finished;
 
     public Converter(Project project) {
         log.info("Iniciando conversor...");
 
         this.project = project;
+		
+		this.finished = new TreeSchema() {
+			@Override
+			protected TreeNode getSpecMappedTreeNodes(TreeNode node) {
+				return null;
+			}
+		};
 
         TreeSchema _source = project.getSourceTreeSchema();
         if( _source instanceof DBTreeSchema ) {
             DBTreeSchema _dbTreeSchema = (DBTreeSchema) _source;
-            reader = new DBReader( _dbTreeSchema );
+            reader = new DBReader( _dbTreeSchema, finished );
         } else if( _source instanceof FixedTXTTreeSchema ) {
             FixedTXTTreeSchema _txtTreeSchema = (FixedTXTTreeSchema) _source;
-            reader = new FixedTXTReader( _txtTreeSchema );
+            reader = new FixedTXTReader( _txtTreeSchema, finished );
         }
 
         TreeSchema _target = project.getTargetTreeSchema();
         if( _target instanceof DelimitedTXTTreeSchema ) {
             DelimitedTXTTreeSchema _txtTreeSceSchema = (DelimitedTXTTreeSchema) _target;
-            writer = new DelimitedTXTWriter(_txtTreeSceSchema);
+            writer = new DelimitedTXTWriter(_txtTreeSceSchema, finished);
         } else if( _target instanceof DBTreeSchema ) {
             DBTreeSchema _dbTreeSchema = (DBTreeSchema) _target;
-            writer = new DBWriter( _dbTreeSchema );
+            writer = new DBWriter( _dbTreeSchema, finished );
         }
 
         Map<TextTreeNode, String> _charConversion = project.getCharConversion();
@@ -76,14 +86,9 @@ public class Converter implements Runnable {
         _tReader.start();
         _tWriter.start();
 
-//		int _waitTime = 2;
-        while ( reader.hasMore() || !reader.hasFinished() ) {
-            try {
-                
-//				if (reader.hasMore()) {
-				TreeSchema _sourceSchema = reader.next();
-				if( _sourceSchema == null )
-					continue;
+		TreeSchema _sourceSchema = null;
+		try {
+			while ( (_sourceSchema = reader.next()) != finished ) {
 
 				TextTreeNode[] _sourceMappings = _sourceSchema.getMappedTreeNodes();
 
@@ -111,35 +116,22 @@ public class Converter implements Runnable {
 
 				writer.add( _targetSchema );
 				reader.returnTreeSchema( _sourceSchema );
-
-				//decrease the wait time when the reader's buffer isn't full
-//				_waitTime = Math.min(Math.round(_waitTime*0.5f), 1);
-					/*
-                } else {
-                    _tReader.setPriority( Thread.MAX_PRIORITY );
-                    _tWriter.setPriority( Thread.NORM_PRIORITY );
-                    Thread.sleep(_waitTime);
-                    //increase the wait time when the reader's buffer is full
-                    _waitTime = Math.round(_waitTime*1.33f);
-                    _tReader.setPriority( Thread.NORM_PRIORITY );
-                    _tWriter.setPriority( Thread.MAX_PRIORITY );
-                }*/
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            } catch (CloneNotSupportedException ex) {
-                ex.printStackTrace();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        
-        try {
-			System.out.println("terminou!");
-            writer.setFinished(true);			
-            _tWriter.join();
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+			}
+		} catch (InterruptedException ex) {
+			ex.printStackTrace();
+		} catch (CloneNotSupportedException ex) {
+			ex.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			try {
+				System.out.println("terminou!");
+				writer.setFinished();
+				_tWriter.join();
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
     }
 
 }

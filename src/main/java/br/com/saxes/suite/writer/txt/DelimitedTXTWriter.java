@@ -3,7 +3,6 @@ package br.com.saxes.suite.writer.txt;
 import br.com.saxes.suite.model.DateTreeNode;
 import br.com.saxes.suite.model.NumericTreeNode;
 import br.com.saxes.suite.model.TextTreeNode;
-import br.com.saxes.suite.model.TreeNode;
 import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.model.txt.DelimitedTXTTreeSchema;
 import br.com.saxes.suite.model.txt.FileRef;
@@ -23,8 +22,8 @@ public class DelimitedTXTWriter extends Writer {
 
     private BufferedWriter fileDest;
 
-    public DelimitedTXTWriter(DelimitedTXTTreeSchema txtTreeSchema) throws WriterInitException {
-        super(txtTreeSchema);
+    public DelimitedTXTWriter(DelimitedTXTTreeSchema txtTreeSchema, TreeSchema finished) throws WriterInitException {
+        super(txtTreeSchema, finished);
 
         this.txtTreeSchema = txtTreeSchema;
 
@@ -41,16 +40,8 @@ public class DelimitedTXTWriter extends Writer {
     @Override
     public void run() {
         try {
-            while( !finished ) {
-                synchronized( buffer ) {
-                    while( buffer.isEmpty() && !finished ) {
-			System.out.println("Buffer.isEmpty && !finished.... waiting");
-                        buffer.wait();
-			System.out.println(Thread.currentThread().getName() + " Waking up");
-                    }
-                }
-
-                TreeSchema _treeSchema = buffer.remove(0);
+			TreeSchema _treeSchema = null;
+            while( (_treeSchema = buffer.take()) != finished ) {
 
                 TextTreeNode[] _mappedNodes = _treeSchema.getMappedTreeNodes();
 

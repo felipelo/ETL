@@ -4,11 +4,9 @@ import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.converter.TreeSchemaPool;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 import org.apache.commons.pool.ObjectPool;
 
@@ -18,9 +16,9 @@ public abstract class Reader implements Runnable {
 
     private static final int BUFFER_SIZE = 100;
 
-    protected boolean finished;
+    protected TreeSchema finished;
 
-    protected final List<TreeSchema> buffer;
+    protected final BlockingQueue<TreeSchema> buffer;
 
     protected ObjectPool treeSchemaPool;
     protected SimpleDateFormat systemDateFormat;
@@ -28,16 +26,16 @@ public abstract class Reader implements Runnable {
 
     private LinkedList<Exception> errors;
 
-    public Reader( TreeSchema treeSchema ) throws ReaderInitException {
+    public Reader( TreeSchema treeSchema, TreeSchema finished ) throws ReaderInitException {
         log.info("Iniciando leitura...");
 
         if( treeSchema == null ) {
             throw new ReaderInitException(null, new NullPointerException("'treeSchema' can't be null."));
         }
 
-        finished = false;
+        this.finished = finished;
         
-        buffer = Collections.synchronizedList( new ArrayList<TreeSchema>(BUFFER_SIZE) );
+        buffer = new ArrayBlockingQueue<TreeSchema>( BUFFER_SIZE );
         treeSchemaPool = new TreeSchemaPool( treeSchema );
 
         log.fine("Padrão de data do systema: ".concat(System.getProperty("saxessuite.systemDatePattern")));
@@ -49,53 +47,13 @@ public abstract class Reader implements Runnable {
         errors = new LinkedList<Exception>();
     }
 
-    public boolean hasFinished() {
-		System.out.println(Thread.currentThread().getName() + " hasFinished():" + finished);
-        return finished;
+    public TreeSchema next() throws InterruptedException {
+		return buffer.take();
     }
-
-    public TreeSchema next() throws IndexOutOfBoundsException {
-        TreeSchema treeNode = null;
-		
-		while( buffer.isEmpty() && !finished ) {
-			synchronized( buffer ) {
-				try {
-					System.out.println(Thread.currentThread().getName() + ":next - wait():Reader");
-					buffer.wait( 500 );
-					System.out.println(Thread.currentThread().getName() + ":next - wakeup:Reader");
-				} catch (InterruptedException ex) {}
-			}
-		}
-
-        if( !buffer.isEmpty() ) {
-			System.out.println(Thread.currentThread().getName() + " Tamanho do buffer: ".concat(String.valueOf(buffer.size())));
-            log.finest("Tamanho do buffer: ".concat(String.valueOf(buffer.size())));
-            treeNode = buffer.remove(0);
-
-            //used to notify a thread that one spot are available
-            synchronized( buffer ) {
-				System.out.println(Thread.currentThread().getName() + " notifing All()");
-                buffer.notifyAll();
-            }
-        } 
-
-        return treeNode;
-    }
-
-    public boolean isFull() {
-	System.out.println(Thread.currentThread().getName() + " isFull():RE " + buffer.size());
-        return ((BUFFER_SIZE - buffer.size()) == 0);
-    }
-
-    public int bufferSize() {
-	System.out.println(Thread.currentThread().getName() + " bufferSize:RE ".concat(String.valueOf(buffer.size())));
-        return buffer.size();
-    }
-
-    public boolean hasMore() {
-	System.out.println(Thread.currentThread().getName() + " hasMore():RE ");
-        return !buffer.isEmpty();
-    }
+	
+	protected void setFinished() throws InterruptedException {
+		buffer.put( finished );
+	}
 
     public void returnTreeSchema( TreeSchema treeSchema ) {
         log.finest("Devolvendo objeto para a pilha");
