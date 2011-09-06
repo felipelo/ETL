@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.02" errors="0" skipped="0" tests="1" name="br.com.saxes.suite.converter.TableOrderTest">
+<testsuite failures="0" time="0.047" errors="0" skipped="0" tests="1" name="br.com.saxes.suite.converter.TableOrderTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386"/>
@@ -19,7 +19,7 @@
     <property name="basedir" value="/home/felipe/NetBeansProjects/ETL"/>
     <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/endorsed"/>
     <property name="os.arch" value="i386"/>
-    <property name="surefire.real.class.path" value="/home/felipe/NetBeansProjects/ETL/target/surefire/surefirebooter2047733464477749911.jar"/>
+    <property name="surefire.real.class.path" value="/home/felipe/NetBeansProjects/ETL/target/surefire/surefirebooter5028827149939488864.jar"/>
     <property name="java.io.tmpdir" value="/tmp"/>
     <property name="line.separator" value="
 "/>
@@ -42,7 +42,7 @@
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="32"/>
     <property name="java.home" value="/usr/lib/jvm/java-6-sun-1.6.0.26/jre"/>
-    <property name="sun.java.command" value="/home/felipe/NetBeansProjects/ETL/target/surefire/surefirebooter2047733464477749911.jar /home/felipe/NetBeansProjects/ETL/target/surefire/surefire6745288225767316893tmp /home/felipe/NetBeansProjects/ETL/target/surefire/surefire6630588772573820424tmp"/>
+    <property name="sun.java.command" value="/home/felipe/NetBeansProjects/ETL/target/surefire/surefirebooter5028827149939488864.jar /home/felipe/NetBeansProjects/ETL/target/surefire/surefire2405521974469184671tmp /home/felipe/NetBeansProjects/ETL/target/surefire/surefire5394924351282618986tmp"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.language" value="en"/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -58,5 +58,5 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.003" classname="br.com.saxes.suite.converter.TableOrderTest" name="testRun"/>
+  <testcase time="0.001" classname="br.com.saxes.suite.converter.TableOrderTest" name="testRun"/>
 </testsuite>
