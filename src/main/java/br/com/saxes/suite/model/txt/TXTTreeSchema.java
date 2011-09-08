@@ -17,6 +17,7 @@ public class TXTTreeSchema extends TreeSchema {
         super();
         this.modelStrategy = modelStrategy;
         fieldQualifier = "";
+		fileRef = new FileRef();
     }
 
     @Override
