@@ -259,9 +259,9 @@ public class ProjectServiceTest {
         txtTreeSchema.setName("txt um dois tres");
         txtTreeSchema.setFileRef(fileRef);
         txtTreeSchema.setRoot(lineTreeNode);
-        txtTreeSchema.setColumnDelimiter(';');
+        txtTreeSchema.setColumnDelimiter(";");
         txtTreeSchema.setFieldQualifier("\"");
-        txtTreeSchema.setLineDelimiter('\n');
+        txtTreeSchema.setLineDelimiter("\n");
 
         //project
         Project project = new Project();

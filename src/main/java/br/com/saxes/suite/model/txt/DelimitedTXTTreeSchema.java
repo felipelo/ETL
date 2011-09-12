@@ -6,18 +6,20 @@ package br.com.saxes.suite.model.txt;
  */
 public class DelimitedTXTTreeSchema extends TXTTreeSchema {
 
-    private char lineDelimiter;
-    private char columnDelimiter;
+    private String lineDelimiter;
+    private String columnDelimiter;
 
     public DelimitedTXTTreeSchema() {
         super( FileModelStrategy.DELIMITED );
+		lineDelimiter = "";
+		columnDelimiter = "";
     }
 
-    public char getColumnDelimiter() { return columnDelimiter; }
-    public void setColumnDelimiter(char columnDelimiter) { this.columnDelimiter = columnDelimiter; }
+    public String getColumnDelimiter() { return columnDelimiter; }
+    public void setColumnDelimiter(String columnDelimiter) { this.columnDelimiter = columnDelimiter; }
 
-    public char getLineDelimiter() { return lineDelimiter; }
-    public void setLineDelimiter(char lineDelimiter) { this.lineDelimiter = lineDelimiter; }
+    public String getLineDelimiter() { return lineDelimiter; }
+    public void setLineDelimiter(String lineDelimiter) { this.lineDelimiter = lineDelimiter; }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
