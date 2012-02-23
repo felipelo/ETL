@@ -1,6 +1,7 @@
 package br.com.saxes.suite.writer.db;
 
 import br.com.saxes.suite.model.TextTreeNode;
+import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.model.db.ConnectionWrapper;
 import br.com.saxes.suite.model.db.DBTreeSchema;
 import br.com.saxes.suite.model.db.TableTreeNode;
@@ -28,8 +29,8 @@ public class DBWriter extends Writer {
     private List<TableTreeNode> tableOrder;
     private Connection conn;
 
-    public DBWriter( DBTreeSchema treeSchema ) throws ReaderInitException {
-        super(treeSchema);
+    public DBWriter( DBTreeSchema treeSchema, TreeSchema finished ) throws ReaderInitException {
+        super(treeSchema, finished);
 
         //open connection
         try {
@@ -113,18 +114,13 @@ public class DBWriter extends Writer {
     @Override
     public void run() {
         try {
-			while( !buffer.isEmpty() || !finished ) {
-                synchronized( buffer ) {
-                    if( buffer.isEmpty() ) {
-                        buffer.wait( 500 );
-						continue;
-                    }
-                }
+			TreeSchema _treeSchema = null;
+			while( (_treeSchema = buffer.take()) != finished ) {
 
-                DBTreeSchema _treeSchema = (DBTreeSchema) buffer.remove(0);
+                DBTreeSchema _dbTreeSchema = (DBTreeSchema) _treeSchema;
                 
                 for( TableTreeNode _orderTable : tableOrder ) {
-                    TableTreeNode _table = (TableTreeNode) _treeSchema.getTreeNodeByID( _orderTable.getId() );
+                    TableTreeNode _table = (TableTreeNode) _dbTreeSchema.getTreeNodeByID( _orderTable.getId() );
                     PreparedStatement _pstmt = pStmts.get( _table.getId() );
                     _pstmt.clearParameters();
 
@@ -143,7 +139,7 @@ public class DBWriter extends Writer {
                     if( _table.getConditions().size() > 0 ) {
                         for( int _y = _x; _y < (_table.getConditions().size()+_x); _y++ ) {
                             UpdateCondition _updateCond = _table.getConditions().get( _y-_x );
-                            TextTreeNode _tn = (TextTreeNode) _treeSchema.getTreeNodeByID( _updateCond.getColumn().getId() );
+                            TextTreeNode _tn = (TextTreeNode) _dbTreeSchema.getTreeNodeByID( _updateCond.getColumn().getId() );
                             _pstmt.setString( _y+1, _tn.getValue());
                         }
                     }
@@ -151,7 +147,7 @@ public class DBWriter extends Writer {
                     _pstmt.executeUpdate();
                 }
                 
-                treeSchemaPool.returnObject( _treeSchema );
+                treeSchemaPool.returnObject( _dbTreeSchema );
             }
 
             conn.commit();

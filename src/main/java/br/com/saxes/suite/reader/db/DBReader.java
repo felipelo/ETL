@@ -2,6 +2,7 @@ package br.com.saxes.suite.reader.db;
 
 import br.com.saxes.suite.model.TextTreeNode;
 import br.com.saxes.suite.model.TreeNode;
+import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.model.db.*;
 import br.com.saxes.suite.reader.Reader;
 import br.com.saxes.suite.reader.ReaderInitException;
@@ -20,8 +21,8 @@ public class DBReader extends Reader {
 
     private final ResultSet rs;
 
-    public DBReader( DBTreeSchema dbTreeSchema ) throws ReaderInitException {
-        super(dbTreeSchema);
+    public DBReader( DBTreeSchema dbTreeSchema, TreeSchema finished ) throws ReaderInitException {
+        super(dbTreeSchema, finished);
 
         this.dbTreeSchema = dbTreeSchema;
 
@@ -84,12 +85,6 @@ public class DBReader extends Reader {
     public void run() {
         try {
             while (rs.next()) {
-                //if the buffer list is full, wait until it has at least one free spot.
-                synchronized( buffer ) {
-                    while( isFull() ) {
-                        buffer.wait();
-                    }
-                }
                 
                 DBTreeSchema _register = (DBTreeSchema) treeSchemaPool.borrowObject();
 
@@ -124,7 +119,7 @@ public class DBReader extends Reader {
                     log.finest("Lendo dado: ".concat(_c).concat(": ").concat(_value));
                 }
                 
-                buffer.add( _register );
+                buffer.put( _register );
             }
         } catch (Exception ex) {
             //should not throw any exception
@@ -132,8 +127,8 @@ public class DBReader extends Reader {
         } finally {
             try {
                 rs.close();
-            } catch (SQLException ex) {}
-            finished = true;
+				setFinished();
+            } catch (Exception ex) {}
         }
     }
 

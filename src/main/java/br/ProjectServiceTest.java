@@ -141,73 +141,80 @@ public class ProjectServiceTest {
         //representa o campo da tabela
         TextTreeNode colTreeNode = new TextTreeNode();
         colTreeNode.setId(String.valueOf(++count));
-        colTreeNode.setName("descricao");
+        colTreeNode.setName("codigo");
         colTreeNode.setDescription("");
 
         //representa o campo da tabela
-        DateTreeNode dateColTreeNode = new DateTreeNode();
+        TextTreeNode dateColTreeNode = new TextTreeNode();
         dateColTreeNode.setId(String.valueOf(++count));
-        dateColTreeNode.setName("horaFim");
+        dateColTreeNode.setName("item");
         dateColTreeNode.setDescription("");
 
         //representa o campo da tabela
-        NumericTreeNode numColTreeNode = new NumericTreeNode();
+        TextTreeNode numColTreeNode = new TextTreeNode();
         numColTreeNode.setId(String.valueOf(++count));
-        numColTreeNode.setName("projeto");
+        numColTreeNode.setName("grupo");
         numColTreeNode.setDescription("");
+
+        //representa o campo da tabela
+        TextTreeNode classeColTreeNode = new TextTreeNode();
+        classeColTreeNode.setId(String.valueOf(++count));
+        classeColTreeNode.setName("classe");
+        classeColTreeNode.setDescription("");
 
         //representa a tabela
         TableTreeNode atividadeTbl = new TableTreeNode();
         atividadeTbl.setId(String.valueOf(++count));
-        atividadeTbl.setName("atividade");
+        atividadeTbl.setName("produto");
         atividadeTbl.setDescription("");
         atividadeTbl.addChild(colTreeNode);
         atividadeTbl.addChild(dateColTreeNode);
         atividadeTbl.addChild(numColTreeNode);
+        atividadeTbl.addChild(classeColTreeNode);
 
-        //representa o campo da tabela
-        NumericTreeNode codProjColumn = new NumericTreeNode();
-        codProjColumn.setId(String.valueOf(++count));
-        codProjColumn.setName("codigo");
-        codProjColumn.setDescription("");
-
-        //representa o campo da tabela
-        TextTreeNode descProjColumn = new TextTreeNode();
-        descProjColumn.setId(String.valueOf(++count));
-        descProjColumn.setName("descricao");
-        descProjColumn.setDescription("");
-
-        FKTreeNode fk = new FKTreeNode();
-        fk.setId(String.valueOf(++count));
-        fk.setName("");
-        fk.setDescription("");
-        fk.setLocalColumn(codProjColumn);
-        fk.setForeignTable(atividadeTbl);
-        fk.setForeignColumn(numColTreeNode);
-        fk.setJoinStrategy(JoinStrategy.INNER_JOIN);
-
-        //representa a tabela
-        TableTreeNode projetoTbl = new TableTreeNode();
-        projetoTbl.setId(String.valueOf(++count));
-        projetoTbl.setName("projeto");
-        projetoTbl.setDescription("");
-        projetoTbl.addChild(codProjColumn);
-        projetoTbl.addChild(descProjColumn);
-        projetoTbl.addChild(fk);
+//        //representa o campo da tabela
+//        NumericTreeNode codProjColumn = new NumericTreeNode();
+//        codProjColumn.setId(String.valueOf(++count));
+//        codProjColumn.setName("codigo");
+//        codProjColumn.setDescription("");
+//
+//        //representa o campo da tabela
+//        TextTreeNode descProjColumn = new TextTreeNode();
+//        descProjColumn.setId(String.valueOf(++count));
+//        descProjColumn.setName("descricao");
+//        descProjColumn.setDescription("");
+//
+//        FKTreeNode fk = new FKTreeNode();
+//        fk.setId(String.valueOf(++count));
+//        fk.setName("");
+//        fk.setDescription("");
+//        fk.setLocalColumn(codProjColumn);
+//        fk.setForeignTable(atividadeTbl);
+//        fk.setForeignColumn(classeColTreeNode);
+//        fk.setJoinStrategy(JoinStrategy.INNER_JOIN);
+//
+//        //representa a tabela
+//        TableTreeNode projetoTbl = new TableTreeNode();
+//        projetoTbl.setId(String.valueOf(++count));
+//        projetoTbl.setName("projeto");
+//        projetoTbl.setDescription("");
+//        projetoTbl.addChild(codProjColumn);
+//        projetoTbl.addChild(descProjColumn);
+//        projetoTbl.addChild(fk);
 
         //connection
         ConnectionWrapper conn = new ConnectionWrapper();
         conn.setName("MySQL Root");
-        conn.setConnURL("jdbc:mysql://187.45.196.181:3306/idealogic1");
-        conn.setUser("idealogic1");
-        conn.setPassword("idealAtv");
+        conn.setConnURL("jdbc:mysql://localhost:3306/teste");
+        conn.setUser("root");
+        conn.setPassword("root");
         conn.setDriver("com.mysql.jdbc.Driver");
 
         //source schema
         DBTreeSchema dbTreeSchema = new DBTreeSchema();
         dbTreeSchema.setName("db um dois tres");
         dbTreeSchema.setConn(conn);
-        dbTreeSchema.setRoot(projetoTbl);
+        dbTreeSchema.setRoot(atividadeTbl);
         
         //representa campo
         TextTreeNode fieldTreeNode = new TextTreeNode();
@@ -216,18 +223,16 @@ public class ProjectServiceTest {
         fieldTreeNode.setDescription("Field description");
 
         //representa campo
-        DateTreeNode dateFieldTreeNode = new DateTreeNode();
+        TextTreeNode dateFieldTreeNode = new TextTreeNode();
         dateFieldTreeNode.setId(String.valueOf(++count));
         dateFieldTreeNode.setName("field_2");
         dateFieldTreeNode.setDescription("Field description");
-        dateFieldTreeNode.setFieldDateFormat("HH:mm");
 
         //representa campo
-        NumericTreeNode numFieldTreeNode = new NumericTreeNode();
+        TextTreeNode numFieldTreeNode = new TextTreeNode();
         numFieldTreeNode.setId(String.valueOf(++count));
         numFieldTreeNode.setName("field_1");
         numFieldTreeNode.setDescription("Field description");
-        numFieldTreeNode.setFieldNumFormat("#0");
 
         //representa campo
         TextTreeNode fieldTreeNode1 = new TextTreeNode();
@@ -247,16 +252,16 @@ public class ProjectServiceTest {
 
         //representa o file
         FileRef fileRef = new FileRef();
-        fileRef.setFilePath("d:/sadas.csv");
+        fileRef.setFilePath("sadas.csv");
 
         //target schema
         DelimitedTXTTreeSchema txtTreeSchema = new DelimitedTXTTreeSchema();
         txtTreeSchema.setName("txt um dois tres");
         txtTreeSchema.setFileRef(fileRef);
         txtTreeSchema.setRoot(lineTreeNode);
-        txtTreeSchema.setColumnDelimiter(';');
+        txtTreeSchema.setColumnDelimiter(";");
         txtTreeSchema.setFieldQualifier("\"");
-        txtTreeSchema.setLineDelimiter('\n');
+        txtTreeSchema.setLineDelimiter("\n");
 
         //project
         Project project = new Project();
@@ -270,8 +275,8 @@ public class ProjectServiceTest {
         
         project.addMapping(colTreeNode, fieldTreeNode, "unico mapeamento");
         project.addMapping(dateColTreeNode, dateFieldTreeNode, "segundo mapeamento");
-        project.addMapping(codProjColumn, numFieldTreeNode, "terceiro mapeamento");
-        project.addMapping(descProjColumn, fieldTreeNode1, "terceiro mapeamento");
+        project.addMapping(numColTreeNode, numFieldTreeNode, "terceiro mapeamento");
+        project.addMapping(classeColTreeNode, fieldTreeNode1, "terceiro mapeamento");
 
         project.setSourceTreeSchema(dbTreeSchema);
         project.setTargetTreeSchema(txtTreeSchema);

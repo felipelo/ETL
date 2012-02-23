@@ -3,6 +3,7 @@ package br.com.saxes.suite.reader.txt;
 import br.com.personal.flatfileparser.FixedWidthFFParser;
 import br.com.saxes.suite.model.TextTreeNode;
 import br.com.saxes.suite.model.TreeNode;
+import br.com.saxes.suite.model.TreeSchema;
 import br.com.saxes.suite.model.txt.FixedTXTTreeSchema;
 import br.com.saxes.suite.model.txt.FixedTextTreeNode;
 import br.com.saxes.suite.reader.Reader;
@@ -22,8 +23,8 @@ public class FixedTXTReader extends Reader {
 
     private FixedWidthFFParser parser;
 
-    public FixedTXTReader(FixedTXTTreeSchema txtTreeSchema) throws ReaderInitException {
-        super(txtTreeSchema);
+    public FixedTXTReader(FixedTXTTreeSchema txtTreeSchema, TreeSchema finished) throws ReaderInitException {
+        super(txtTreeSchema, finished);
 
         File _sourceFile = new File(txtTreeSchema.getFileRef().getFilePath());
         ArrayList<TreeNode> _nodes = txtTreeSchema.getRoot().getChilds();
@@ -51,14 +52,6 @@ public class FixedTXTReader extends Reader {
     public void run() {
          try {
             while (parser.next()) {
-                //if the buffer list is full, wait until it has at least one free spot.
-                synchronized (buffer) {
-                    while (isFull()) {
-                        System.out.println(Thread.currentThread().getName() + "Buffer.isFull.... waiting " + buffer.size());
-                        buffer.wait();
-						System.out.println(Thread.currentThread().getName() + " Waking up");
-                    }
-                }
 
                 FixedTXTTreeSchema _line = (FixedTXTTreeSchema) treeSchemaPool.borrowObject();
 
@@ -78,27 +71,15 @@ public class FixedTXTReader extends Reader {
                     }
                 }
 
-                buffer.add( _line );
-				synchronized( buffer ) {
-					System.out.println(Thread.currentThread().getName() + ":notifyAll():FixedTXTReader");
-					buffer.notifyAll();
-				}
+                buffer.put( _line );
             }
-			while( !buffer.isEmpty() ) {
-				synchronized( buffer ) {
-					System.out.println(Thread.currentThread().getName() + ":wait():FixedTXTReader");
-					buffer.wait( 500 );
-					System.out.println(Thread.currentThread().getName() + ":wake up:FixedTXTReader");
-				}
-			}
         } catch (Exception ex) {
             Logger.getLogger(FixedTXTReader.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 parser.close();
+				setFinished();
             } catch (Exception ex) {}
-			
-			finished = true;
         }
     }
 }

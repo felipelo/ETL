@@ -2,9 +2,8 @@ package br.com.saxes.suite.model;
 
 import java.util.ArrayList;
 
-public abstract class TreeSchema {
+public abstract class TreeSchema extends TreeNode {
 
-    private String name;
     private TreeNode root;
 
     public TreeNode getTreeNodeByID( String id ) {
@@ -55,12 +54,6 @@ public abstract class TreeSchema {
 
     protected abstract TreeNode getSpecMappedTreeNodes( TreeNode node );
 
-    /*
-     * Getters & Setters methods
-     */
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public TreeNode getRoot() { return root; }
     public void setRoot(TreeNode root) { this.root = root; }
 
@@ -70,7 +63,6 @@ public abstract class TreeSchema {
     }
 
     protected void clone( TreeSchema treeSchema ) throws CloneNotSupportedException {
-        treeSchema.setName( name );
         treeSchema.setRoot( (TreeNode) root.clone());
     }
 }

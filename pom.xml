@@ -5,7 +5,7 @@
     <groupId>br.com.saxes.suite</groupId>
     <artifactId>SaxesSuiteAPI</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
     <name>SaxesSuiteAPI</name>
     <url>http://maven.apache.org</url>
     <build>

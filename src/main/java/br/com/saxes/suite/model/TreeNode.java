@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
  *
  * @author Felipe
  */
-public abstract class TreeNode {
+public class TreeNode {
 
     /*An unic value for the whole project*/
     private String id;
