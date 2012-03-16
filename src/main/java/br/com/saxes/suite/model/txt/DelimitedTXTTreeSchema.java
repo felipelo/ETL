@@ -1,9 +1,15 @@
 package br.com.saxes.suite.model.txt;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author felipe
  */
+@XmlRootElement
+@XmlAccessorType(value=XmlAccessType.FIELD)
 public class DelimitedTXTTreeSchema extends TXTTreeSchema {
 
     private String lineDelimiter;
