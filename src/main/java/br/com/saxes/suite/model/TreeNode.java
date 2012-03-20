@@ -39,6 +39,22 @@ public class TreeNode {
 
         childs.add(child);
     }
+    
+    public void addChild( int pos, TreeNode child ) {
+        child.setParentTreeNode(this);
+        
+        if( pos <= childs.size() )
+            childs.add(pos, child);
+        else
+            childs.add(child);
+    }
+    
+    public int removeChild( TreeNode child ) {
+        int _pos = childs.indexOf( child );
+        _pos = childs.remove(child) ? _pos : -1;
+            
+        return _pos;
+    }
 
     @XmlTransient
     public TreeNode getParentTreeNode() { return parentTreeNode; }
